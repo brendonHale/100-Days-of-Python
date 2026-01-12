@@ -1,1 +1,5 @@
-len(12345)
+len("12345")
+print(type("strig"))
+print(type(1234))
+print(type(3.14))
+print(type(True))
