@@ -24,9 +24,69 @@ MENU = {
     }
 }
 
+profit = 0
 resources = {
     "water": 300,
     "milk": 200,
     "coffee": 100,
 }
 
+
+def check_resources(order):
+    for item in order:
+        if order[item] > resources[item]:
+            print(f"Sorry, there is not enough {item}")
+            return False
+    return True
+
+
+def transaction(money, cost):
+    if money >= cost:
+        change = round(money - cost, 2)
+        print(f"Here is ${change} in change.")
+        global profit
+        profit += cost
+        return True
+    else:
+        print(f"Sorry, you do not have enough money. Money refunded.")
+        return False
+
+
+def process_coins():
+    print("Please insert coins.")
+    total = int(input("How many quarters?: ")) * 0.25
+    total += int(input("How many dimes?: ")) * 0.1
+    total += int(input("How many nickles?: ")) * 0.05
+    total += int(input("How many pennies?: ")) * 0.01
+    return total
+
+
+def make_drink(name, ingredients):
+    for item in ingredients:
+        resources[item] -= ingredients[item]
+    print(f"Here is your {name}. Enjoy!")
+
+
+making = True
+
+while making:
+    choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
+
+    if choice == "off":
+        making = False
+
+    elif choice == "report":
+        print(f"Water: {resources['water']}ml")
+        print(f"Milk: {resources['milk']}ml")
+        print(f"Coffee: {resources['coffee']}g")
+        print(f"Money: ${profit}")
+
+    elif choice in MENU:
+        drink = MENU[choice]
+        if check_resources(drink["ingredients"]):
+            payment = process_coins()
+            if transaction(payment, drink["cost"]):
+                make_drink(choice, drink["ingredients"])
+
+    else:
+        print("Sorry, not an option. Try again.")
